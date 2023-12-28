@@ -31,6 +31,12 @@ function NavigationBar(props) {
                                     <NavDropdown.Item href="/pasttest?page=1">족보</NavDropdown.Item>
                                 </>}
                             </NavDropdown>
+                            { props.session !== null && props.session.role >= 1 && 
+                                <NavDropdown title="관리" id="collapsible-nav-dropdown3">
+                                <NavDropdown.Item href="/applicant">가입 신청 목록</NavDropdown.Item>
+                                <NavDropdown.Item href="/assignment?page=1">과제 제출 관리</NavDropdown.Item>
+                            </NavDropdown>
+                            }
                         </Nav>
                         {
                             props.session === null && <Nav className="text-white">
