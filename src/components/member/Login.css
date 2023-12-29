@@ -1,4 +1,4 @@
-#inputtext::placeholder{
+.inputtext::placeholder{
     color: gray;
 }
 .res-width{

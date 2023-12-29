@@ -40,7 +40,7 @@ function LoginForm(props) {
                                     아이디 :
                                 </td> */}
                                 <td className="align-middle bg-transparent">
-                                    <Form.Control id="inputtext" type="text" placeholder="아이디" className="bg-transparent text-white" value={id} onChange={(e) => setId(e.target.value)} />
+                                    <Form.Control type="text" placeholder="아이디" className="inputtext bg-transparent text-white" value={id} onChange={(e) => setId(e.target.value)} />
                                 </td>
                             </tr>
                             <tr>
@@ -48,7 +48,7 @@ function LoginForm(props) {
                                     비밀번호 :
                                 </td> */}
                                 <td className="align-middle bg-transparent">
-                                    <Form.Control  id="inputtext" type="password" placeholder="비밀번호" className="bg-transparent text-white" value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e)=>{
+                                    <Form.Control  type="password" placeholder="비밀번호" className="inputtext bg-transparent text-white" value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e)=>{
                                         if(e.code === "Enter"){
                                             loginProc();
                                         }
