@@ -47,7 +47,6 @@ function SeminarViewer() {
                         let link = document.createElement("a");
                         link.download = data.attachments[i].realName + data.attachments[i].extension;
                         link.href = window.URL.createObjectURL(d);
-                        document.body.appendChild(link);
                         link.click();
                     })
             }}>{data.attachments[i].realName + data.attachments[i].extension}</Dropdown.Item>);

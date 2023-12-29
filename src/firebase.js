@@ -34,7 +34,7 @@ export async function memberApply(applydata) {
     if (await isExistApply(applydata)) return 2;
     applydata.pw = SHA256(applydata.pw);
     const applyRef = doc(db, 'applicant', createUUID());
-    setDoc(applyRef, applydata, { merge: false });
+    await setDoc(applyRef, applydata, { merge: false });
     return 0;
 }
 export async function isExistID(userid) {
@@ -91,7 +91,7 @@ export async function acceptApply(userid) {
         data = doc;
     });
     const memberRef = doc(db, 'member', createUUID());
-    setDoc(memberRef, data.data(), { merge: false });
+    await setDoc(memberRef, data.data(), { merge: false });
     deleteDoc(doc(db, 'applicant', data.id));
 }
 export async function rejectApply(userid) {
@@ -121,7 +121,7 @@ export async function login(userid, userpw) {
 
 export async function createAttachmentData(fileName, realName, extension, article) {
     const attachRef = doc(db, "attachments", fileName);
-    setDoc(attachRef, { fileName: fileName, realName: realName, extension: extension, article: article }, { merge: false });
+    await setDoc(attachRef, { fileName: fileName, realName: realName, extension: extension, article: article }, { merge: false });
 }
 
 export async function createArticle(category, data, files, progressHandler, errorHandler, successHandler) {
@@ -133,7 +133,7 @@ export async function createArticle(category, data, files, progressHandler, erro
     }
     const id = createUUID();
     const articleRef = doc(db, category, id);
-    setDoc(articleRef, { ...data, id: id }, { merge: false });
+    await setDoc(articleRef, { ...data, id: id }, { merge: false });
     if (files.length > 0) {
         const uploads = [];
         const success = [];
@@ -179,7 +179,7 @@ export async function editArticle(category, id, data, progressHandler, errorHand
         await deleteDoc(doc(db, "attachments", removeFiles[i]));
     }
     const articleRef = doc(db, category, id);
-    setDoc(articleRef, {
+    await setDoc(articleRef, {
         title: data.title,
         content: data.content
     }, { merge: true });
@@ -319,10 +319,10 @@ export async function getArticles(category, page, thumbnail = false) {
         const data = doc.data();
         articles.push(data);
     });
+    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if ((page - 1) * 10 >= articles.length) return [];
     if (page * 10 > articles.length) articles = articles.slice((page - 1) * 10, articles.length);
     else articles = articles.slice((page - 1) * 10, page * 10);
-    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if (thumbnail) {
         const newArticles = [];
         for (let i = 0; i < articles.length; i++) {
@@ -343,9 +343,9 @@ export async function getSearchedArticles(category, search, page, thumbnail = fa
             || (data.createAt !== undefined && data.createAt.includes(search)))
             articles.push(data);
     });
+    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if (page * 10 > articles.length) articles = articles.slice((page - 1) * 10, articles.length);
     else articles = articles.slice((page - 1) * 10, page * 10);
-    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if (thumbnail) {
         const newArticles = [];
         for (let i = 0; i < articles.length; i++) {
@@ -418,7 +418,7 @@ export async function editSeminarData(id, files, data, progressHandler, errorHan
         await deleteDoc(doc(db, "attachments", removeFiles[i]));
     }
     const articleRef = doc(db, "seminar_data", id);
-    setDoc(articleRef, {
+    await setDoc(articleRef, {
         title: data.title,
         content: data.content,
         assign_exist: data.assign_exist
@@ -516,7 +516,7 @@ export async function createSeminarData(data, files, progressHandler, errorHandl
     const now = new Date();
     const seminarId = createUUID();
     const seminarRef = doc(db, 'seminar_data', seminarId);
-    setDoc(seminarRef, {
+    await setDoc(seminarRef, {
         title: data.title,
         content: data.content,
         id: seminarId,
@@ -587,19 +587,25 @@ export async function getSeminarDatas(session, page) {
             articles[i] = { ...articles[i], submit: submit }
         }
     }
+    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if ((page - 1) * 10 >= articles.length) return [];
     if (page * 10 > articles.length) articles = articles.slice((page - 1) * 10, articles.length);
     else articles = articles.slice((page - 1) * 10, page * 10);
-    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     return articles;
 }
 
-export async function getSeminarDataPageCount() {
+export async function getSeminarDataPageCount(assign=false) {
     let articles = [];
     const querySnapshot = await getDocs(collection(db, "seminar_data"));
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        articles.push(data);
+        if(assign){
+            if(data.assign_exist){
+                articles.push(data);
+            }
+        } else {
+            articles.push(data);
+        }
     });
     return articles.length / 10;
 }
@@ -628,20 +634,26 @@ export async function getSeminarSearchedDatas(session, search, page) {
             articles[i] = { ...articles[i], submit: submit }
         }
     }
+    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     if ((page - 1) * 10 >= articles.length) return [];
     if (page * 10 > articles.length) articles = articles.slice((page - 1) * 10, articles.length);
     else articles = articles.slice((page - 1) * 10, page * 10);
-    articles = articles.sort((a, b) => b.timestamp - a.timestamp);
     return articles;
 }
 
-export async function getSeminarSearchedDataPageCount(search) {
+export async function getSeminarSearchedDataPageCount(search, assign=false) {
     let articles = [];
     const querySnapshot = await getDocs(collection(db, "seminar_data"));
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         if (data.title !== undefined && data.title.includes(search))
-            articles.push(data);
+            if(assign){
+                if(data.assign_exist){
+                    articles.push(data);
+                }
+            } else {
+                articles.push(data);
+            }
     });
     return articles.length / 10;
 }
@@ -675,7 +687,7 @@ export async function getSeminarData(id) {
 async function createAssignment(data) {
     const assignmentId = createUUID();
     const assignRef = doc(db, 'assignment', assignmentId);
-    setDoc(assignRef, {
+    await setDoc(assignRef, {
         ...data,
         id: assignmentId
     }, { merge: false });
@@ -683,7 +695,7 @@ async function createAssignment(data) {
 
 async function editAssignment(data){
     const assignRef = doc(db, 'assignment', data.id);
-    setDoc(assignRef, data, { merge: true });
+    await setDoc(assignRef, data, { merge: true });
 }
 
 export async function submitAssignment(session, id, file, progressHandler, errorHandler, successHandler) {
@@ -704,10 +716,12 @@ export async function submitAssignment(session, id, file, progressHandler, error
     }
     const attachmentId = createUUID();
     const submitRef = doc(db, 'assign-submit', createUUID());
-    setDoc(submitRef, {
+    await setDoc(submitRef, {
         assignment: id,
         attachments: attachmentId,
-        member: session.name + "(" + session.studentId + ")"
+        member: session.name + "(" + session.studentId + ")",
+        timestamp: new Date(),
+        file: file.name
     }, { merge: false });
     const extension = file.name.substring(file.name.lastIndexOf('.'));
     await createAttachmentData(attachmentId, file.name.substring(0, file.name.lastIndexOf('.')), extension, id);
@@ -734,4 +748,15 @@ export async function getSubmitAssign(session, id) {
     let attach = null;
     querySnapshot.forEach((doc) => attach = doc.data());
     return attach;
+}
+
+export async function getSubmits(id){
+    const seminar = await getSeminarData(id);
+    if(seminar.assign === null) return null;
+    const assignId = seminar.assign.id;
+    const submitQuery = query(collection(db, "assign-submit"), where("assignment","==",assignId));
+    const submitSnapshot = await getDocs(submitQuery);
+    const submits = [];
+    submitSnapshot.forEach(d => submits.push(d.data()));
+    return submits;
 }

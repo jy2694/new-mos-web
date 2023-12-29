@@ -141,7 +141,7 @@ function EditArticle(){
                     </tr>
                     <tr>
                         <td colSpan={4}>
-                            <Form.Control as="textarea" rows={15} className="bg-dark text-white" value={content} onChange={(e)=>setContent(e.target.value)}/>
+                            <Form.Control as="textarea" rows={15} className="bg-dark text-white" value={content.replaceAll("<br/>", "\n")} onChange={(e) => setContent(e.target.value.replaceAll("\n", "<br/>"))} />
                         </td>
                     </tr>
                     <tr>

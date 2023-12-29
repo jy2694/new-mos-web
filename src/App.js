@@ -20,6 +20,7 @@ import SeminarViewer from './components/seminar/SeminarViewer';
 import EditArticle from './components/articles/EditArticle';
 import EditSeminarData from './components/seminar/EditSeminarData';
 import { SHA256 } from './firebase';
+import AssignmentSubmitManagement from './components/seminar/AssignmentSubmitManagement';
 
 function App() {
 
@@ -75,7 +76,8 @@ function App() {
             <Route path="/seminaredit" element={<EditSeminarData />}></Route>
             <Route path="/login" element={<LoginForm onLogin={(s) => setSession(s)} />}></Route>
             <Route path="/apply" element={<RegisterForm />}></Route>
-            <Route path="/applicant" element={session !== null && session.role >= 1 && <ApplicantList />}></Route>
+            <Route path="/applicant" element={<ApplicantList />}></Route>
+            <Route path="/assmanage" element={<AssignmentSubmitManagement />}></Route>
             <Route path="/*" element={<NotFound />}></Route>
           </Routes>
         </header>

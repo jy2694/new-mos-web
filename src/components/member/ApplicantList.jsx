@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Form, Modal, Table } from "react-bootstrap";
-import { acceptApply, getApplicantList, rejectApply } from "../../firebase";
+import { SHA256, acceptApply, getApplicantList, rejectApply } from "../../firebase";
 
 function ApplicantList() {
-
     const [selected, setSelected] = useState(-1);
     const [applicants, setApplicants] = useState([]);
     const [deleteFlag, setDeleteFlag] = useState(false);
+
+    useEffect(()=>{
+        const storage = window.sessionStorage.getItem("token");
+        const validation = window.sessionStorage.getItem("validation");
+        if (storage !== undefined && storage !== null) {
+            if (SHA256(storage) !== validation) {
+                alert("세션 변조가 감지되었습니다. 다시 로그인해주시기 바랍니다.");
+                window.sessionStorage.removeItem("token");
+                window.sessionStorage.removeItem("validation");
+                window.location = "/";
+                return;
+            }
+            if (JSON.parse(storage).role < 1) {
+                alert("권한이 없습니다.");
+                window.location = "/";
+                return;
+            }
+        } else {
+            alert("권한이 없습니다.");
+            window.location = "/";
+            return;
+        }
+    }, []);
 
     useEffect(() => {
         if (applicants.length !== 0) return;

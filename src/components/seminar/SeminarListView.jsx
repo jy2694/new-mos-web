@@ -26,6 +26,10 @@ function SeminarListView(props) {
                 return;
             }
             setSession(JSON.parse(storage));
+        } else {
+            alert("권한이 없습니다.");
+            window.location = "/";
+            return;
         }
         if (Number(getParameter("page")) === 0) {
             window.location = "/404";

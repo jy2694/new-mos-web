@@ -9,7 +9,9 @@ function ListView(props) {
     const [maxPage, setMaxPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState(null);
     const [session, setSession] = useState(null);
-
+    const getParameter = (key) => {
+        return new URLSearchParams(window.location.search).get(key);
+    };
     useEffect(() => {
         const storage = window.sessionStorage.getItem("token");
         const validation = window.sessionStorage.getItem("validation");
@@ -24,10 +26,15 @@ function ListView(props) {
             }
             setSession(JSON.parse(storage));
         }
+        if(props.category === "pasttest"){
+            if (storage === undefined || storage === null) {
+                alert("권한이 없습니다.");
+                window.location = "/";
+                return;
+            }
+        }
     }, []);
-    const getParameter = (key) => {
-        return new URLSearchParams(window.location.search).get(key);
-    };
+    
     useEffect(() => {
         if (Number(getParameter("page")) === 0) {
             window.location = "/404";
@@ -50,6 +57,7 @@ function ListView(props) {
     }, [props.category]);
 
     useEffect(() => {
+        if(maxPage === 1) return;
         if (page !== 1 && page > maxPage) {
             window.location = "/404";
         }

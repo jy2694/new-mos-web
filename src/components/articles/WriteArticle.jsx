@@ -43,6 +43,9 @@ function WriteArticle(props) {
     const getParameter = (key) => {
         return new URLSearchParams(window.location.search).get(key);
     };
+    useEffect(()=>{
+        console.log(content);
+    }, [content]);
     const renderAttachs = () => {
         const result = [];
         for (let i = 0; i < attachs.length; i++) {
@@ -105,7 +108,7 @@ function WriteArticle(props) {
                     </tr>
                     <tr>
                         <td colSpan={4}>
-                            <Form.Control as="textarea" rows={15} className="bg-dark text-white" value={content} onChange={(e) => setContent(e.target.value)} />
+                            <Form.Control as="textarea" rows={15} className="bg-dark text-white" value={content.replaceAll("<br/>", "\n")} onChange={(e) => setContent(e.target.value.replaceAll("\n", "<br/>"))} />
                         </td>
                     </tr>
                     <tr>
