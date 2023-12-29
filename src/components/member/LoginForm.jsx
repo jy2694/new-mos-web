@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Container, Form, Table } from "react-bootstrap";
 import { SHA256, login } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import './Login.css';
 
 function LoginForm(props) {
 
@@ -32,34 +33,26 @@ function LoginForm(props) {
             <h3 className="w-100 text-start mb-3">로그인</h3>
             <Container className="d-flex flex-column w-100 justify-content-center border-top border-secondary ">
                 <Container className="w-100 d-flex justify-content-center mt-5">
-                    <Table className="table-borderless mt-3 w-50 text-start">
+                    <Table className="table-borderless mt-3 res-width text-start">
                         <tbody>
                             <tr>
-                                <td className="align-middle bg-transparent text-white">
+                                {/* <td className="align-middle bg-transparent text-white">
                                     아이디 :
-                                </td>
+                                </td> */}
                                 <td className="align-middle bg-transparent">
-                                    <Form.Control type="text" className="bg-transparent text-white" value={id} onChange={(e) => setId(e.target.value)} />
+                                    <Form.Control id="inputtext" type="text" placeholder="아이디" className="bg-transparent text-white" value={id} onChange={(e) => setId(e.target.value)} />
                                 </td>
                             </tr>
                             <tr>
-                                <td className="align-middle bg-transparent text-white">
+                                {/* <td className="align-middle bg-transparent text-white">
                                     비밀번호 :
-                                </td>
+                                </td> */}
                                 <td className="align-middle bg-transparent">
-                                    <Form.Control type="password" className="bg-transparent text-white" value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e)=>{
+                                    <Form.Control  id="inputtext" type="password" placeholder="비밀번호" className="bg-transparent text-white" value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e)=>{
                                         if(e.code === "Enter"){
                                             loginProc();
                                         }
                                     }}/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="align-middle bg-transparent">
-                                    
-                                </td>
-                                <td className="text-end align-middle bg-transparent text-white">
-                                    비밀번호를 잊어버리셨나요?
                                 </td>
                             </tr>
                             <tr>

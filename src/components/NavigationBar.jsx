@@ -9,7 +9,7 @@ function NavigationBar(props) {
     }
 
     return <>
-        <div>
+        <div style={{zIndex:"3"}}>
             <Navbar className="d-flex justify-content-center text-white text-center bg-body-tertiary" bg="dark" data-bs-theme="dark">
                 <Navbar.Brand className="d-flex justify-content-center align-items-end" href="/">MOS<span className="ms-1 align-items-end h-100" style={{ fontSize: "0.5em" }}>Make Our Software</span></Navbar.Brand>
             </Navbar>

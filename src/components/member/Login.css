@@ -1,0 +1,21 @@
+#inputtext::placeholder{
+    color: gray;
+}
+.res-width{
+    width: 100%;
+}
+@media (min-width: 500px) {
+    .res-width{
+        width: 75%;
+    }
+}
+@media (min-width: 800px) {
+    .res-width{
+        width: 50%;
+    }
+}
+@media (min-width: 1400px) {
+    .res-width{
+        width: 35%;
+    }
+}
