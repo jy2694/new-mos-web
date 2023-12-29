@@ -19,3 +19,9 @@
         width: 35%;
     }
 }
+@media (min-height: 1000px){
+    .res-height{
+        position: fixed;
+        bottom: 0;
+    }
+}
